@@ -10,3 +10,6 @@ text = "Saksham Sapkota is the Don of IOE."
 result = embedding.embed_query(text=text)
 
 print(str(result))
+
+# print(len(result))
+# print(result[0])

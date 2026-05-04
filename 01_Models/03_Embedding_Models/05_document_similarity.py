@@ -26,7 +26,10 @@ query_embeddings = embedding.embed_query(query)
 # print(np.array(query_embeddings).shape)
 
 scores = cosine_similarity([query_embeddings], doc_embeddings)[0]
-index, score = sorted(list(enumerate(scores)),key=lambda x:x[1])[-1]
+# index, score = sorted(list(enumerate(scores)),key=lambda x:x[1])[-1]
+
+index = np.argmax(scores)
+score = scores[index]
 
 print(f"Query: {query}")
 print(f"Similar Document: {documents[index]}")
