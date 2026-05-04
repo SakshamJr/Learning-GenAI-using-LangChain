@@ -15,4 +15,10 @@ result = model.invoke(messages)
 
 messages.append(AIMessage(content=result.content))
 
-print(messages)
+messages.append(HumanMessage(content="Who created it?")) # Short-term memory
+
+result = model.invoke(messages)
+print(result.content)
+messages.append(AIMessage(content=result.content))
+
+# print(messages)

@@ -1,41 +1,54 @@
+import os
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 
-llm = HuggingFaceEndpoint(repo_id="Qwen/Qwen3-Coder-Next", task="text-generation")
+# Model
+llm = HuggingFaceEndpoint(
+    repo_id="Qwen/Qwen3-Coder-Next",
+    task="text-generation"
+)
 model = ChatHuggingFace(llm=llm)
 
-chat_template = ChatPromptTemplate(
-    [
-        ("system", "You are a helpful customer support assistant. Dont use Emojis and use plain understandable English."),
-        MessagesPlaceholder(variable_name="chat_history"),
-        ("human", "{query}"),
-    ]
-)
+# Template
+chat_template = ChatPromptTemplate([
+    ("system", "You are a helpful assistant. Use simple English."),
+    MessagesPlaceholder(variable_name="chat_history"),
+    ("human", "{query}")
+])
 
 chat_history = []
-with open("02_Prompts/chat_history.txt") as f:
-    chat_history.extend(f.readlines())
-if chat_history:
-    print("Restored Previous Conversation.\n")
+
+# Load history
+if os.path.exists("chat_history.txt"):
+    with open("chat_history.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("Human:"):
+                chat_history.append(HumanMessage(content=line.replace("Human:", "").strip()))
+            elif line.startswith("AI:"):
+                chat_history.append(AIMessage(content=line.replace("AI:", "").strip()))
+
 while True:
-    query = str(input("You: "))
+    query = input("You: ")
     if query == "exit":
-        print("Thanks for using our ChatBot!")
         break
-    chat_template.append(HumanMessage(content=query))
-    prompt = chat_template.invoke({"chat_history": chat_history, "query": query})
+
+    prompt = chat_template.invoke({
+        "chat_history": chat_history,
+        "query": query
+    })
 
     response = model.invoke(prompt)
-    print(f"AI: {response.content}")
-    chat_template.append(AIMessage(content=response.content))
+
+    print("AI:", response.content)
+
     chat_history.append(HumanMessage(content=query))
     chat_history.append(AIMessage(content=response.content))
 
-with open("02_Prompts/chat_history.txt", "a",encoding="utf-8") as f:
-    # Simple text format
+# Save history
+with open("chat_history.txt", "w", encoding="utf-8") as f:
     for msg in chat_history:
         if isinstance(msg, HumanMessage):
             f.write(f"Human: {msg.content}\n")
-        elif isinstance(msg, AIMessage):
+        else:
             f.write(f"AI: {msg.content}\n")
