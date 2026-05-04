@@ -33,5 +33,5 @@ template = PromptTemplate(
 # final_result = parser.parse(result.content)
 
 chain = template | model | parser
-final_result = chain.invoke({"place":"Nepal"})
+final_result = chain.invoke({"place":"Nepali"})
 print(final_result)
