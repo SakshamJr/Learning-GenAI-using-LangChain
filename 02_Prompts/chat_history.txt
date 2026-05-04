@@ -1,0 +1,6 @@
+User: What is the capital city of Nepal?
+AI: Kathmandu
+User: Where is it located? Which province?
+AI: Kathmandu is located in the central part of Nepal, within Province No. 3 (also known as Bagmati Province). It lies in the Kathmandu Valley, surrounded by the Himalayan foothills.
+User: Good job! The prompt template works!
+AI: Thank you!
