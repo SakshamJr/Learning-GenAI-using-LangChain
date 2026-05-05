@@ -169,7 +169,7 @@ chain = RunnableParallel(
 # ---------------------------
 # Run
 # ---------------------------
-review_input = "This is a terrible phone, the battery drains fast."
+review_input = "This is an amazing phone, the battery is solid."
 result = chain.invoke({"review": review_input})
 
 print(result)
